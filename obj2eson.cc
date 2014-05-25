@@ -38,6 +38,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "picojson.h"
 #include "eson.h"
 
+static std::string GetBaseFilename(const std::string &FileName) {
+  if (FileName.find_last_of(".") != std::string::npos)
+    return FileName.substr(0, FileName.find_last_of("."));
+  return "";
+}
+
 class
 vector3
 {
@@ -352,19 +358,19 @@ DumpMeshes(
   mesh["faces"]        = eson::Value((uint8_t*)&indices[0], sizeof(unsigned int)*nfaces*3);
 
   if (!normals.empty()) {
-    mesh["facevaryingN"] = eson::Value((uint8_t*)&normals[0], sizeof(float)*nnormals*3);
+    mesh["facevarying_normals"] = eson::Value((uint8_t*)&normals[0], sizeof(float)*nnormals*3);
   }
   if (!tangents.empty()) {
-    mesh["facevaryingT"] = eson::Value((uint8_t*)&tangents[0], sizeof(float)*nnormals*3);
+    mesh["facevarying_tangents"] = eson::Value((uint8_t*)&tangents[0], sizeof(float)*nnormals*3);
   }
   if (!binormals.empty()) {
-    mesh["facevaryingB"] = eson::Value((uint8_t*)&binormals[0], sizeof(float)*nnormals*3);
+    mesh["facevarying_binormals"] = eson::Value((uint8_t*)&binormals[0], sizeof(float)*nnormals*3);
   }
   if (!uvs.empty()) {
-    mesh["facevaryingST"] = eson::Value((uint8_t*)&uvs[0], sizeof(float)*nnormals*2);
+    mesh["facevarying_uvs"] = eson::Value((uint8_t*)&uvs[0], sizeof(float)*nnormals*2);
   }
 
-  mesh["materialid"] = eson::Value((uint8_t*)&materialIDs[0], sizeof(unsigned short)*nfaces);
+  mesh["material_ids"] = eson::Value((uint8_t*)&materialIDs[0], sizeof(unsigned short)*nfaces);
   
   eson::Value v = eson::Value(mesh);
   int64_t size = v.Size();
@@ -413,7 +419,9 @@ main(
   bool ret = DumpMeshes(shapes, outputfile);
   assert(ret);
 
-  std::string materialfilename = outputfile + ".material.json";
+  std::string basename = GetBaseFilename(outputfile);
+
+  std::string materialfilename = basename + ".material.json";
   ret = DumpMaterials(shapes, materialfilename);
   assert(ret);
 
