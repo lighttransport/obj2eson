@@ -160,12 +160,11 @@ DumpMaterials(
 
     params["diffuse"] = picojson::value(kdArr);
     params["ambient"] = picojson::value(kaArr);
-    // @todo
-    //params["reflection"] = picojson::value(ksArr);
-    //params["refraction"] = picojson::value(ktArr);
+    params["reflection"] = picojson::value(ksArr);
+    params["refraction"] = picojson::value(ktArr);
 
-    obj["id"] = picojson::value((double)(i));
-    obj["name"] = picojson::value("tmp");
+    obj["index"] = picojson::value((double)(i));
+    obj["id"] = picojson::value("tmp"); // @todo
     obj["type"] = picojson::value("obj_material");
     obj["params"] = picojson::value(params);
 
