@@ -119,33 +119,33 @@ JSONFromDoubleArray(
 
 static bool
 DumpMaterials(
-  std::vector<tinyobj::shape_t>& shapes,
+  std::vector<tinyobj::material_t>& materials,
   const std::string& filename)
 {
 
   picojson::array arr;
-  for (size_t i = 0; i < shapes.size(); i++) {
+  for (size_t i = 0; i < materials.size(); i++) {
     picojson::object obj;
 
     std::vector<double> kd;
-    kd.push_back(shapes[i].material.diffuse[0]);
-    kd.push_back(shapes[i].material.diffuse[1]);
-    kd.push_back(shapes[i].material.diffuse[2]);
+    kd.push_back(materials[i].diffuse[0]);
+    kd.push_back(materials[i].diffuse[1]);
+    kd.push_back(materials[i].diffuse[2]);
 
     std::vector<double> ka;
-    ka.push_back(shapes[i].material.ambient[0]);
-    ka.push_back(shapes[i].material.ambient[1]);
-    ka.push_back(shapes[i].material.ambient[2]);
+    ka.push_back(materials[i].ambient[0]);
+    ka.push_back(materials[i].ambient[1]);
+    ka.push_back(materials[i].ambient[2]);
 
     std::vector<double> ks;
-    ks.push_back(shapes[i].material.specular[0]);
-    ks.push_back(shapes[i].material.specular[1]);
-    ks.push_back(shapes[i].material.specular[2]);
+    ks.push_back(materials[i].specular[0]);
+    ks.push_back(materials[i].specular[1]);
+    ks.push_back(materials[i].specular[2]);
 
     std::vector<double> kt;
-    kt.push_back(shapes[i].material.transmittance[0]);
-    kt.push_back(shapes[i].material.transmittance[1]);
-    kt.push_back(shapes[i].material.transmittance[2]);
+    kt.push_back(materials[i].transmittance[0]);
+    kt.push_back(materials[i].transmittance[1]);
+    kt.push_back(materials[i].transmittance[2]);
 
     picojson::object params;
 
@@ -404,8 +404,9 @@ main(
   std::string outputfile(argv[2]);
 
   std::vector<tinyobj::shape_t> shapes;
+  std::vector<tinyobj::material_t> materials;
 
-  std::string err = tinyobj::LoadObj(shapes, inputfile.c_str());
+  std::string err = tinyobj::LoadObj(shapes, materials, inputfile.c_str());
 
   if (!err.empty()) {
     std::cerr << err << std::endl;
@@ -423,7 +424,7 @@ main(
   std::string basename = GetBaseFilename(outputfile);
 
   std::string materialfilename = basename + ".material.json";
-  ret = DumpMaterials(shapes, materialfilename);
+  ret = DumpMaterials(materials, materialfilename);
   assert(ret);
 
   return 0;
