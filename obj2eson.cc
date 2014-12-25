@@ -357,6 +357,7 @@ DumpMeshes(
   mesh["faces"]        = eson::Value((uint8_t*)&indices[0], sizeof(unsigned int)*nfaces*3);
 
   if (!normals.empty()) {
+    //printf("has normal\n");
     mesh["facevarying_normals"] = eson::Value((uint8_t*)&normals[0], sizeof(float)*nnormals*3);
   }
   if (!tangents.empty()) {
@@ -366,6 +367,7 @@ DumpMeshes(
     mesh["facevarying_binormals"] = eson::Value((uint8_t*)&binormals[0], sizeof(float)*nnormals*3);
   }
   if (!uvs.empty()) {
+    //printf("has uv\n");
     mesh["facevarying_uvs"] = eson::Value((uint8_t*)&uvs[0], sizeof(float)*nnormals*2);
   }
 
